@@ -1,11 +1,29 @@
 #include <Windows.h>
 #include <iostream>
+#include <cmath>
+
+bool isWithinRange(int value, int target, int range) 
+{
+	return std::abs(value - target) <= range;
+}
+
+bool isYellowOrOrange(COLORREF c, int to1Yellow, int to1Orange) 
+{
+	int r = GetRValue(c);
+	int g = GetGValue(c);
+	int b = GetBValue(c);
+
+	bool isYellow = isWithinRange(r, 255, to1Yellow) && isWithinRange(g, 255, to1Yellow) && isWithinRange(b, 0, to1Yellow);
+	bool isOrange = isWithinRange(r, 255, to1Orange) && isWithinRange(g, 165, to1Orange) && isWithinRange(b, 0, to1Orange);
+
+	return isYellow || isOrange;
+}
 
 COLORREF GetPixelColor(int x, int y)
 {
-	HDC hdcScreen = GetDC(NULL);
-	COLORREF color = GetPixel(hdcScreen, x, y);
-	ReleaseDC(NULL, hdcScreen);
+	HDC hdc = GetDC(NULL);
+	COLORREF color = GetPixel(hdc, x, y);
+	ReleaseDC(NULL, hdc);
 
 	return color;
 }
