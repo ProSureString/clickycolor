@@ -5,6 +5,7 @@
 int rad = 2;
 int ox = -8;
 int oy = 8;
+bool active = false;
 
 void LeftClick() {
 	INPUT in[2] = {};
@@ -69,21 +70,31 @@ int main()
 {
 	//int screenX = GetSystemMetrics(SM_CXSCREEN) / 2;
 	//int screenY = GetSystemMetrics(SM_CYSCREEN) / 2;
- 
+	RegisterHotKey(NULL, 1, MOD_CONTROL | MOD_ALT, 'B');
+
+	MSG msg = { 0 };
 	while (true) {
-		POINT p;
-		GetCursorPos(&p);
 
-		p.x += ox;
-		p.y += oy;
-
-		if (checkAreaForColor(p.x, p.y, rad)) {
-			LeftClick();
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			if (msg.message == WM_HOTKEY) {
+				active = !active, std::cout << "[AutoClick] " << (active ? "ON" : "OFF") << "\n";
+			}
 		}
+		if (active) {
+			POINT p;
+			GetCursorPos(&p);
+
+			p.x += ox;
+			p.y += oy;
+
+			if (checkAreaForColor(p.x, p.y, rad)) {
+				LeftClick();
+			}
 
 
-		COLORREF c = getPixelColor(p.x, p.y);
-		std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
-		std::cout << "Color check: " << (isYellowOrOrange(c) ? "Match!" : "No match.") << std::endl;
+			COLORREF c = getPixelColor(p.x, p.y);
+			std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
+			std::cout << "Color check: " << (isYellowOrOrange(c) ? "Match!" : "No match.") << std::endl;
+		}
 	}
 }
