@@ -12,10 +12,12 @@ COLORREF GetPixelColor(int x, int y)
 
 int main()
 {
-	POINT p;
-	GetCursorPos(&p);
+
  
 	while (true) {
+		POINT p;
+		GetCursorPos(&p);
+
 		COLORREF c = GetPixelColor(p.x - 20, p.y);
 		std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
 	}
