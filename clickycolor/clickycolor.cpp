@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-int rad = 3;
+int rad = 2;
 int ox = -8;
 int oy = 8;
 
@@ -78,11 +78,9 @@ int main()
 		p.y += oy;
 
 		if (checkAreaForColor(p.x, p.y, rad)) {
-			//LeftClick();
-			Sleep(100);
+			LeftClick();
 		}
 
-		Sleep(10);
 
 		COLORREF c = getPixelColor(p.x, p.y);
 		std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
