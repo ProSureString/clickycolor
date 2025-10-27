@@ -2,9 +2,9 @@
 #include <iostream>
 #include <cmath>
 
-int rad = 2;
-int ox = -8;
-int oy = 8;
+int rad = 1;
+int ox = -4;
+int oy = 4;
 bool active = false;
 
 void LeftClick() {
@@ -41,28 +41,23 @@ bool isYellowOrOrange(COLORREF c)
 	return (warmTone && (yellowish || orangish || darkYellow));
 }
 
-COLORREF getPixelColor(int x, int y)
+COLORREF getPixelColor(int x, int y, HDC hdc)
 {
-	HDC hdc = GetDC(NULL);
 	COLORREF color = GetPixel(hdc, x, y);
-	ReleaseDC(NULL, hdc);
 
 	return color;
 }
 
-bool checkAreaForColor(int x, int y, int rad)
+bool checkAreaForColor(int x, int y, int rad, HDC hdc)
 {
-	HDC hdc = GetDC(NULL);
     for (int dx = -rad; dx <= rad; dx++) {
         for (int dy = -rad; dy <= rad; dy++) {
 			COLORREF c = GetPixel(hdc, x + dx, y + dy);
 			if (isYellowOrOrange(c)) {
-				ReleaseDC(NULL, hdc);
 				return true;
 			}
 		}
 	}
-	ReleaseDC(NULL, hdc);
 	return false;
 }
 
@@ -72,12 +67,15 @@ int main()
 	//int screenY = GetSystemMetrics(SM_CYSCREEN) / 2;
 	RegisterHotKey(NULL, 1, MOD_CONTROL | MOD_ALT, 'B');
 
+	HDC hdc = GetDC(NULL);
+
+
 	MSG msg = { 0 };
 	while (true) {
 
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			if (msg.message == WM_HOTKEY) {
-				active = !active, std::cout << "[AutoClick] " << (active ? "ON" : "OFF") << "\n";
+				active = !active, std::cout << "toggled : " << (active ? "ON" : "OFF") << "\n";
 			}
 		}
 		if (active) {
@@ -87,14 +85,19 @@ int main()
 			p.x += ox;
 			p.y += oy;
 
-			if (checkAreaForColor(p.x, p.y, rad)) {
-				LeftClick();
-			}
 
 
-			COLORREF c = getPixelColor(p.x, p.y);
+			COLORREF c = getPixelColor(p.x, p.y, hdc);
 			std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
 			std::cout << "Color check: " << (isYellowOrOrange(c) ? "Match!" : "No match.") << std::endl;
+		
+			if (isYellowOrOrange(c)) {
+				//LeftClick();
+				std::cout << "match" << std::endl;
+				//Sleep(100);
+			}
 		}
+
+		ReleaseDC(NULL, hdc);
 	}
 }
