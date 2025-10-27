@@ -2,7 +2,18 @@
 #include <iostream>
 #include <cmath>
 
+int rad = 3;
+int ox = -8;
+int oy = 8;
 
+void LeftClick() {
+	INPUT in[2] = {};
+	in[0].type = INPUT_MOUSE;
+	in[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+	in[1] = in[0];
+	in[1].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+	SendInput(2, in, sizeof(INPUT));
+}
 
 bool isWithinRange(int value, int target, int range) 
 {
@@ -29,7 +40,7 @@ bool isYellowOrOrange(COLORREF c)
 	return (warmTone && (yellowish || orangish || darkYellow));
 }
 
-COLORREF GetPixelColor(int x, int y)
+COLORREF getPixelColor(int x, int y)
 {
 	HDC hdc = GetDC(NULL);
 	COLORREF color = GetPixel(hdc, x, y);
@@ -38,18 +49,42 @@ COLORREF GetPixelColor(int x, int y)
 	return color;
 }
 
+bool checkAreaForColor(int x, int y, int rad)
+{
+	HDC hdc = GetDC(NULL);
+    for (int dx = -rad; dx <= rad; dx++) {
+        for (int dy = -rad; dy <= rad; dy++) {
+			COLORREF c = GetPixel(hdc, x + dx, y + dy);
+			if (isYellowOrOrange(c)) {
+				ReleaseDC(NULL, hdc);
+				return true;
+			}
+		}
+	}
+	ReleaseDC(NULL, hdc);
+	return false;
+}
+
 int main()
 {
-
+	//int screenX = GetSystemMetrics(SM_CXSCREEN) / 2;
+	//int screenY = GetSystemMetrics(SM_CYSCREEN) / 2;
  
 	while (true) {
 		POINT p;
 		GetCursorPos(&p);
 
-		p.x -= 8;
-		p.y += 8;
+		p.x += ox;
+		p.y += oy;
 
-		COLORREF c = GetPixelColor(p.x, p.y);
+		if (checkAreaForColor(p.x, p.y, rad)) {
+			//LeftClick();
+			Sleep(100);
+		}
+
+		Sleep(10);
+
+		COLORREF c = getPixelColor(p.x, p.y);
 		std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
 		std::cout << "Color check: " << (isYellowOrOrange(c) ? "Match!" : "No match.") << std::endl;
 	}
