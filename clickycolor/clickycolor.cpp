@@ -97,7 +97,8 @@ int main()
 				//Sleep(100);
 			}
 		}
-
-		ReleaseDC(NULL, hdc);
 	}
+
+	ReleaseDC(NULL, hdc);
+	return 0;
 }
