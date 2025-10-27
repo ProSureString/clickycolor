@@ -88,13 +88,12 @@ int main()
 
 
 			COLORREF c = getPixelColor(p.x, p.y, hdc);
-			std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
-			std::cout << "Color check: " << (isYellowOrOrange(c) ? "Match!" : "No match.") << std::endl;
+			//std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
+			//std::cout << "Color check: " << (isYellowOrOrange(c) ? "Match!" : "No match.") << std::endl;
 		
-			if (isYellowOrOrange(c)) {
-				//LeftClick();
+			if (isYellowOrOrange(getPixelColor(p.x, p.y, hdc))) {
+				LeftClick();
 				std::cout << "match" << std::endl;
-				//Sleep(100);
 			}
 		}
 	}
