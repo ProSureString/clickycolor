@@ -7,7 +7,7 @@ bool isWithinRange(int value, int target, int range)
 	return std::abs(value - target) <= range;
 }
 
-bool isYellowOrOrange(COLORREF c, int to1Yellow = 25, int to1Orange = 25) 
+bool isYellowOrOrange(COLORREF c, int to1Yellow = 50, int to1Orange = 25) 
 {
 	int r = GetRValue(c);
 	int g = GetGValue(c);
@@ -35,6 +35,9 @@ int main()
 	while (true) {
 		POINT p;
 		GetCursorPos(&p);
+
+		p.x -= 8;
+		p.y -= 8;
 
 		COLORREF c = GetPixelColor(p.x, p.y);
 		std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
