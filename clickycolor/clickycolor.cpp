@@ -1,19 +1,11 @@
 #include <Windows.h>
 #include <iostream>
 
-HDC GetScreenDC()
+COLORREF GetPixelColor(int x, int y)
 {
-	return GetDC(NULL);
-}
-
-void ReleeaseScreenDC(HDC hdc)
-{
-	ReleaseDC(NULL, hdc);
-}
-
-COLORREF GetPixelColor(int x, int y, HDC hdc)
-{
-	COLORREF color = GetPixel(hdc, x, y);
+	HDC hdcScreen = GetDC(NULL);
+	COLORREF color = GetPixel(hdcScreen, x, y);
+	ReleaseDC(NULL, hdcScreen);
 
 	return color;
 }
@@ -23,14 +15,8 @@ int main()
 	POINT p;
 	GetCursorPos(&p);
  
-	HDC hdc = GetScreenDC();
-
 	while (true) {
-		COLORREF c = GetPixelColor(p.x, p.y, hdc);
+		COLORREF c = GetPixelColor(p.x, p.y);
 		std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
 	}
-
-
-	ReleeaseScreenDC(hdc);
-
 }
