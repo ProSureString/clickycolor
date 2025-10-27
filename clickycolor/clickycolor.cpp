@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cmath>
 
+
+
 bool isWithinRange(int value, int target, int range) 
 {
 	return std::abs(value - target) <= range;
@@ -45,7 +47,7 @@ int main()
 		GetCursorPos(&p);
 
 		p.x -= 8;
-		p.y -= 8;
+		p.y += 8;
 
 		COLORREF c = GetPixelColor(p.x, p.y);
 		std::cout << "Pixel at (" << p.x << ", " << p.y << ") -> " << "R: " << (int)GetRValue(c) << " G: " << (int)GetGValue(c) << " B: " << (int)GetBValue(c) << std::endl;
